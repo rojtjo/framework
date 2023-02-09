@@ -67,6 +67,13 @@ class Migrator
     protected $paths = [];
 
     /**
+     * The cache of previously loaded migration files.
+     *
+     * @var array
+     */
+    protected static $cache = [];
+
+    /**
      * The output interface implementation.
      *
      * @var \Symfony\Component\Console\Output\OutputInterface
@@ -511,7 +518,7 @@ class Migrator
             return new $class;
         }
 
-        $migration = $this->files->getRequire($path);
+        $migration = self::$cache[$path] ??= $this->files->getRequire($path);
 
         return is_object($migration) ? $migration : new $class;
     }
